@@ -28,3 +28,48 @@ VALUES
     (15, 'Cozy Throw Blanket', 'Furnishings', 24.99, 100, 4.2);
 
 #For this project, I used SQL to query the Superstore database to get information about items sold at the store and their prices. 
+
+#return items listed by ordering by price, in descending order
+SELECT item_name, price
+FROM superstore
+ORDER BY price desc;
+
+#return basic stats on prices
+SELECT avg(price) FROM superstore;
+SELECT max(price) FROM superstore;
+SELECT min(price) FROM superstore;
+
+#return basic stats on prices from a given category
+SELECT avg(price) FROM superstore WHERE category="Kitchen Supplies"
+SELECT max(price) FROM superstore WHERE category="Kitchen Supplies"
+SELECT min(price) FROM superstore WHERE category="Kitchen Supplies"
+
+#return the categroy with the highest price (without listing price)
+
+SELECT category
+FROM superstore
+GROUP BY category
+ORDER BY MAX(price) DESC
+LIMIT 1;
+
+#return the categroy with the highest price (listing price)
+SELECT category, MAX(price)
+FROM superstore
+GROUP BY category
+ORDER BY MAX(price) DESC
+LIMIT 1;
+
+#return the categroy with the lowest price (without listing price)
+SELECT category
+FROM superstore
+GROUP BY category
+ORDER BY MIN(price) DESC
+LIMIT 1;
+
+#return the categroy with the lowest price (listing price)
+SELECT category, MIN(price)
+FROM superstore
+GROUP BY category
+ORDER BY MIN(price) DESC
+LIMIT 1;
+
