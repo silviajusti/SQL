@@ -1,3 +1,5 @@
+#This project utilizes the following data: 
+
 CREATE TABLE bank_products (
     product_id INTEGER PRIMARY KEY,
     product_name TEXT,
