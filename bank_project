@@ -27,11 +27,11 @@ VALUES
     (14, 'Rewards Credit Card', 'Credit Card', 21.99, 0.00, 0.00),
     (15, 'Auto Loan', 'Loan', 4.25, 0.00, 20000.00);
 
-#taking a look at the database
+-- taking a look at the database
 select *
 from bank_products;
 
-#using "or" to return products types that are savings or checking
+-- using "or" to return products types that are savings or checking
 select *
 from bank_products
 where product_type="Savings" 
