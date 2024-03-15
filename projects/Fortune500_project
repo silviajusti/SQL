@@ -58,3 +58,48 @@ VALUES
     ('Company JJ', 'Manufacturing', 370.0, 3100, 1, 20, 12, 7.6),
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
 
+
+-- take a look at the data
+
+select *
+from fortune_companies; 
+
+-- Group the data in a new way using a CASE statement.Order by number of employees in reverse order
+
+SELECT COUNT(*)as number_of_employees,
+CASE WHEN employees >=100000 THEN "Giant"
+WHEN employees >=10000 THEN "Big"
+WHEN employees >=1000 THEN "Medium"
+ELSE "Small" END AS "Company_size"
+FROM fortune_companies
+GROUP BY Company_size
+order by number_of_employees desc;
+
+--Use a HAVING clause to determine something interesting about the data 
+
+select industry, round(avg(avg_employee_tenure),2) as avg_tenure
+from fortune_companies
+group by industry
+having avg_tenure >= 3; 
+
+
+--Use logical operators like AND or OR to filter the data in an interesting way
+
+select *
+from fortune_companies 
+where healthcare_benefits=1 
+and maternity_leave_weeks >8
+or healthcare_benefits=1 
+and paid_time_off_days >=20
+order by paid_time_off_days desc;
+
+-- Use an aggregate function like AVG, SUM, COUNT, MAX, and/or MIN to return summary statistics about the data.
+-- I am looking at maternity leave time in relation to the industry
+
+SELECT COUNT(*) as maternity_leave_matters, industry,
+CASE WHEN maternity_leave_weeks >=12 THEN "3_months_ML"
+WHEN maternity_leave_weeks >=6 THEN "1.5_months_ML"
+ELSE "Under 6 weeks" END AS "Maternity_leave"
+FROM fortune_companies
+GROUP BY maternity_leave_weeks
+order by maternity_leave_weeks desc;
