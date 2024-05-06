@@ -1,0 +1,146 @@
+## For this project I am using dataset called chinook, which represents a digital media store and includes tables for artists, albums, media tracks, invoices, and customers
+
+--Understading the database
+select * from albums limit 10;
+select * from artists limit 10;
+select * from customers limit 10;
+select * from employees limit 10;
+select * from genres limit 10;
+select * from invoice_items limit 10;
+select * from invoices limit 10;
+select * from media_types limit 10; 
+select * from playlist_track limit 10;
+select * from tracks limit 10;
+
+--Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").
+SELECT FirstName || ' ' || LastName as FullName, CustomerId, Country
+FROM customers
+where Country <> 'USA'
+order by Country;
+
+--Show only the Customers from Brazil
+SELECT *
+FROM customers
+where Country ='Brazil';
+
+--Show the Employees who are Sales Agents.
+select LastName, FirstName
+from employees 
+where Title = 'Sales Support Agent';
+
+--Find a unique/distinct list of billing countries from the Invoice table.
+select distinct BillingCountry
+from invoices 
+Order by BillingCountry;
+
+--Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+select emp.FirstName || ' ' || emp.LastName as FullName, inv.invoiceID
+from invoices inv
+inner join customers cust
+on inv.CustomerID=cust.CustomerID
+inner join employees emp
+on cust.SupportRepId=emp.EmployeeID
+order by InvoiceID asc;
+
+-- Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+select 
+inv.Total,
+cust.Firstname,
+cust.lastname,
+cust.country,
+emp.FirstName || ' ' || emp.LastName as EmpFullName
+from invoices inv
+inner join customers cust
+on inv.CustomerID=cust.CustomerID
+inner join employees emp
+on cust.SupportRepId=emp.EmployeeID
+order by EmpFullName;
+
+-- show the average spent by each customer
+select round(avg(inv.Total),2) as AvgSpent,
+cust.FirstName || ' ' || cust.LastName as CustFullName
+from invoices inv
+inner join customers cust
+on inv.CustomerID=cust.CustomerID
+group by CustFullName;
+
+-- show the avergae sold by each Rep
+select 
+round(avg(inv.Total),2) as AvgSale,
+emp.FirstName || ' ' || emp.LastName as EmpFullName
+from invoices inv
+inner join customers cust
+on inv.CustomerID=cust.CustomerID
+inner join employees emp
+on cust.SupportRepId=emp.EmployeeID
+group by EmpFullName
+order by AvgSale desc;
+
+--How many Invoices were there in 2009?
+select count(InvoiceDate)
+from invoices
+where InvoiceDate  regexp '2009-*';
+
+--What are the total sales for 2009?
+select round(sum(Total), 2)
+from invoices
+where InvoiceDate  regexp '2009-*';
+
+--Write a query that includes the purchased track name with each invoice line ID.
+Select InvoiceLineID,
+Name
+from invoice_items
+inner join tracks
+on invoice_items.TrackId=tracks.TrackId
+order by InvoiceLineID;
+
+--Write a query that includes the purchased track name AND artist name with each invoice line ID
+Select InvoiceLineID,
+artists.Name Artist,
+tracks.Name track
+from invoice_items
+inner join tracks
+on invoice_items.TrackId=tracks.TrackId
+inner join albums
+on albums.albumid=tracks.albumid
+inner join artists
+on artists.artistid=albums.artistid
+order by InvoiceLineID;
+
+--Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre
+Select tracks.Name track,
+albums.Title album,
+media_types.Name media_type,
+genres.Name genre
+from tracks
+inner join media_types
+on tracks.MediaTypeId=media_types.MediaTypeId
+inner join albums
+on tracks.AlbumId=albums.AlbumId
+inner join genres
+on tracks.GenreId=genres.GenreId
+order by album;
+
+--Show the total sales made by each sales agent
+select 
+round(sum(inv.Total),2) as TotalSale,
+emp.FirstName || ' ' || emp.LastName as EmpFullName
+from invoices inv
+inner join customers cust
+on inv.CustomerID=cust.CustomerID
+inner join employees emp
+on cust.SupportRepId=emp.EmployeeID
+group by EmpFullName
+order by AvgSale desc;
+
+--Which sales agent made the most dollars in sales in 2009?
+select 
+emp.FirstName || ' ' || emp.LastName as EmpFullName
+from invoices inv
+inner join customers cust
+on inv.CustomerID=cust.CustomerID
+inner join employees emp
+on cust.SupportRepId=emp.EmployeeID
+group by EmpFullName
+order by round(sum(inv.Total),2) desc
+limit 1;
