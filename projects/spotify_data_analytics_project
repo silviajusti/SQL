@@ -57,7 +57,12 @@ select danceability
     from Spotifydata
 order by popularity
     limit 10);
---Calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star”.
+
+--Calculate the average popularity for the artists in the Spotify data table. 
+select avg(popularity) pops
+from Spotifydata;
+
+--For every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star”.
 with temptable as (
 select *,
 avg(popularity) pops
